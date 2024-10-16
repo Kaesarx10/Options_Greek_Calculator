@@ -1,4 +1,13 @@
 # Greeks calculator would measure the sensitivity of the price of options to various factors.
 # Primary greeks include Delta, Gamma, Theta, Vega, Rho
+### 
+Delta: Measures the sensitivity of the option's price to the price of the underlying asset.
+Gamma: Measures the rate of change of Delta with respect to changes in the underlying price.
+Theta: Measures the sensibility of the options's price to the passage of time (time decay).
+Vega: Measures the sensibility of the option's price to changes in the volatility of the underlying asset.
+Rho: Measures the sensibility of the option's price tp the changes in the risk-free interest rate.
+###
 
 import numpy as np
+from scipy.stats import norm
+
