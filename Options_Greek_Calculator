@@ -1,0 +1,4 @@
+# Greeks calculator would measure the sensitivity of the price of options to various factors.
+# Primary greeks include Delta, Gamma, Theta, Vega, Rho
+
+import numpy as np
