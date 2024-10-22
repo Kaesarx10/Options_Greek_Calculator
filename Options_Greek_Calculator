@@ -1,6 +1,6 @@
 # Greeks calculator would measure the sensitivity of the price of european options to various factors.
 # Primary greeks include Delta, Gamma, Theta, Vega, Rho
-### 
+###
 Delta: Measures the sensitivity of the option's price to the price of the underlying asset.
 Gamma: Measures the rate of change of Delta with respect to changes in the underlying price.
 Theta: Measures the sensibility of the options's price to the passage of time (time decay).
@@ -25,41 +25,41 @@ def black_scholes(S, K, T, r, sigma, option_type):
 
 	Returns:
 	tuple: Option Price
-	
+
 
 # Before calculating the Complete Formula for price of either a Call, or a Put;
 
 #		C = S * N(d1) - K * e^(-rT) * N(d2)
 #		P = K * e^(-rT) * N(-d2) - S * N(-d1)
 
- # Values d1, and d2 are defined. 
+ # Values d1, and d2 are defined.
 
  # d1 represents the normalized distance between the current stock price and the strike price, adjusted for the time value of money and the volatility of the security
  # Growth rate is incoporated through rate r, and volatility incorporated through sigma.
- # This isused to calculate the probability the Option will be In-the-Money at the expiration, adjusted for time value of money. 
+ # This isused to calculate the probability the Option will be In-the-Money at the expiration, adjusted for time value of money.
  # d1 = [ ln(S/K) + (r+(sigma^2)/2) * T ] / [ sigma * T^(1/2) ]
 
 	d1 = (np.log(S/K) + (r + .5*sigma**2) * T ) / (sigma * np.sqrt(T))
 
- # d2 is derived by subtracting the product sigmaand the square root of T, from d1. 
- # d2 = d1 - sigma * T^(1/2) 
+ # d2 is derived by subtracting the product sigmaand the square root of T, from d1.
+ # d2 = d1 - sigma * T^(1/2)
  # This is used to calculate the probability that the Option will be Excercised, considering the discounting effect of the risk-free rate.
 
 	d2 = d1 - sigma * np.sqrt(T)
 
  # N(d1) and N(d2) are Cumulative Distribution Functions of the standard normal distribution evaluated at d1 and d2.
 
- # N(d1) Represents the probability that the Option will be In-the-Money, adjusted for the Time Value of Money and. It accounts for the expected growth of the stock price and the risk associated with it. 
+ # N(d1) Represents the probability that the Option will be In-the-Money, adjusted for the Time Value of Money and. It accounts for the expected growth of the stock price and the risk associated with it.
 
- # N(d2) Represents the probability the Option will be Excecised, consideringthe discounting effect of the risk-free rate. It is essentially the risk-neutral probability that the Option will bw In-the-Money at Expiration. 
+ # N(d2) Represents the probability the Option will be Excecised, consideringthe discounting effect of the risk-free rate. It is essentially the risk-neutral probability that the Option will bw In-the-Money at Expiration.
 
 	if option_type == 'call':
 		option_price = S * norm.cdf(d1) - K * np.exp(-rT) * norm.cdf(d2)
-	
+
 	elif option_type == 'put':
 		option_price = K * np.exp(-rT) * norm.cdf(-d2) - S * norm.cdf(-d1)
 
-	else: 
+	else:
 		Raise ValueError("Invalid option type. Use 'call', or 'put'.")
 
 	Return option_price
@@ -99,3 +99,10 @@ def vega(S, K, T, r, sigma)
 	return S * norm.pdf(d1) * np.sqrt(T) / 100
 
 # Rho: Measures the sensibility of the option's price tp the changes in the risk-free interest rate.
+
+def rho(S, K, T, r, sigma, option_type='call'):
+	_, _, d2 = black_scholes(S, K, T, r, sigma, option_type)
+	if option_type == 'call':
+		return K * T * np.exp(-r * T) * norm.cdf(d2) / 100
+	elif option_type == 'input':
+		return -K * T * np.exp(-r * T) * norm.cdf(-d2) / 100
